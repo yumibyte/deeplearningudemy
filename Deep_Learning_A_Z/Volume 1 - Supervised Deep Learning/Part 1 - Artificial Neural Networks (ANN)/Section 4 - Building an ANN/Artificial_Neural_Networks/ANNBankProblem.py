@@ -30,10 +30,23 @@ y = dataset.iloc[:, 13].values
 # Encoding categorical data
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 from sklearn.compose import ColumnTransformer
+
 labelencoder_X_1 = LabelEncoder()
 X[:, 1] = labelencoder_X_1.fit_transform(X[:, 1])
 labelencoder_X_2 = LabelEncoder()
 X[:, 2] = labelencoder_X_2.fit_transform(X[:, 2])
+
+onehotencoder = ColumnTransformer([('one_hot_encoder',OneHotEncoder(),[1])],remainder='passthrough')
+
+X = onehotencoder.fit_transform(X)
+
+X = X[:, 1:]
+
+
+# labelencoder_X_1 = LabelEncoder()
+# X[:, 1] = labelencoder_X_1.fit_transform(X[:, 1])
+# labelencoder_X_2 = LabelEncoder()
+# X[:, 2] = labelencoder_X_2.fit_transform(X[:, 2])
 
 onehotencoder = ColumnTransformer([('one_hot_encoder', 
                          OneHotEncoder(), [1])], remainder='passthrough')
