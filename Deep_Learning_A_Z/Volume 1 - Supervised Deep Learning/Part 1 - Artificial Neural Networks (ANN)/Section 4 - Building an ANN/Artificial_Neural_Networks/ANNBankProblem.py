@@ -35,30 +35,14 @@ labelencoder_X_1 = LabelEncoder()
 X[:, 1] = labelencoder_X_1.fit_transform(X[:, 1])
 labelencoder_X_2 = LabelEncoder()
 X[:, 2] = labelencoder_X_2.fit_transform(X[:, 2])
-
 onehotencoder = ColumnTransformer([('one_hot_encoder',OneHotEncoder(),[1])],remainder='passthrough')
-
 X = onehotencoder.fit_transform(X)
-
 X = X[:, 1:]
 
 
-# labelencoder_X_1 = LabelEncoder()
-# X[:, 1] = labelencoder_X_1.fit_transform(X[:, 1])
-# labelencoder_X_2 = LabelEncoder()
-# X[:, 2] = labelencoder_X_2.fit_transform(X[:, 2])
-
-onehotencoder = ColumnTransformer([('one_hot_encoder', 
-                         OneHotEncoder(), [1])], remainder='passthrough')
-X = onehotencoder.fit_transform(X)
-X = X[:, 1]
-
-# onehotencoder = OneHotEncoder(categorical_features = [0])
-# X = onehotencoder.fit_transform(X).toarray()
-
 # Splitting the dataset into the Training set and Test set
-from sklearn.cross_validation import train_test_split
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.25, random_state = 0)
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 0)
 
 # Feature Scaling
 from sklearn.preprocessing import StandardScaler
@@ -66,8 +50,26 @@ sc = StandardScaler()
 X_train = sc.fit_transform(X_train)
 X_test = sc.transform(X_test)
 
-# Fitting classifier to the Training set
-# Create your classifier here
+# Create the ANN
+# Import Keras librariers and packages
+import keras
+from keras.models import Sequential
+from keras.layers import Dense
+
+# Initializing ANN
+classifier = Sequential()
+
+# Adding input layer and first hidden layer
+classifier.add(Dense(output_dim = 6, init = 'uniform', activation = 'relu', input_dim = 11))
+
+# Adding the second hidden layer
+classifier.add(Dense(output_dim = 6, init = 'uniform', activation = 'relu'))
+
+# Adding output layer
+classifier.add(Dense(output_dim = 1, init = 'uniform', activation = 'sigmoid'))
+
+# Compiling the ANN
+classifier.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics = ['accuracy'])
 
 # Predicting the Test set results
 y_pred = classifier.predict(X_test)
